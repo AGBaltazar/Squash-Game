@@ -1,0 +1,41 @@
+import { useRef, useState } from 'react';
+
+import Phaser from 'phaser';
+import { PhaserGame } from './game/PhaserGame';
+
+function App ()
+{
+    // The sprite can only be moved in the MainMenu Scene
+    const [canMoveSprite, setCanMoveSprite] = useState(true);
+    
+    //  References to the PhaserGame component (game and scene are exposed)
+    const phaserRef = useRef();
+
+    const changeScene = () => {
+
+        const scene = phaserRef.current.scene;
+
+        if (scene)
+        {
+            scene.changeScene();
+        }
+    }
+
+    // Event emitted from the PhaserGame component
+    const currentScene = (scene) => {
+
+        setCanMoveSprite(scene.scene.key !== 'MainMenu');
+        
+    }
+
+    return (
+        <div id="app">
+            <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
+            <div>
+
+            </div>
+        </div>
+    )
+}
+
+export default App
