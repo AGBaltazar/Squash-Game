@@ -21,7 +21,7 @@ To get started with this project, follow these steps:
 
 bash
 Copy code
-git clone https://github.com/your-repo/bluey-squash-game.git
+git clone https://github.com/your-repo/squash-game.git
 cd bluey-squash-game
 Install Dependencies: This project uses basic JavaScript and does not require complex setup. Simply download and open the HTML file in a browser.
 

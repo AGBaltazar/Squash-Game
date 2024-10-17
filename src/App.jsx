@@ -21,6 +21,8 @@ function App ()
         }
     }
 
+    
+
     // Event emitted from the PhaserGame component
     const currentScene = (scene) => {
 
