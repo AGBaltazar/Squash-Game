@@ -7,7 +7,6 @@ export class Game extends Scene {
     }
 
     preload() {
-        // Load assets
         this.load.image('court', 'assets/court.png');
         this.load.image('ball', 'assets/Ball.png');
         this.load.spritesheet('bandit', 'assets/Bandit.png', { frameWidth: 150, frameHeight: 200 });
@@ -16,49 +15,13 @@ export class Game extends Scene {
 
     create() {
         this.cameras.main.setBackgroundColor(0x000000);
-
-        const canvasWidth = this.scale.width;
-        const canvasHeight = this.scale.height;
-
-        const courtScale = canvasHeight * 0.8;
         
-        this.court = this.add.image(canvasWidth / 2, canvasHeight / 2, 'court').setDisplaySize(courtScale, courtScale / 2); 
-
-        const banditX = canvasWidth * 0.2;
-        const stripeX = canvasWidth * 0.8;
-        const playerY = canvasHeight * 0.5;
-        
-        this.bandit = this.physics.add.sprite(banditX, playerY, 'bandit').setScale(0.5); 
-        this.stripe = this.physics.add.sprite(stripeX, playerY, 'stripe').setScale(0.5); 
-        
-        this.ball = this.physics.add.sprite(canvasWidth / 2, playerY, 'ball').setScale(0.2);
-
-        this.createCourtBorders(canvasWidth, canvasHeight);
-
         this.createFloatingWindow(500, 500);
 
         EventBus.emit('current-scene-ready', this);
     }
 
-    createCourtBorders(width, height) {
-        const borderThickness = 20;  
-
-        this.physics.add.staticImage(width / 2, (height * 0.1) - (borderThickness / 2), null)
-            .setDisplaySize(width * 0.8, borderThickness)
-            .setVisible(false);
-
-        this.physics.add.staticImage(width / 2, (height * 0.9) + (borderThickness / 2), null)
-            .setDisplaySize(width * 0.8, borderThickness)
-            .setVisible(false);
-
-        this.physics.add.staticImage((width * 0.1) - (borderThickness / 2), height / 2, null)
-            .setDisplaySize(borderThickness, height * 0.8)
-            .setVisible(false);
-
-        this.physics.add.staticImage((width * 0.9) + (borderThickness / 2), height / 2, null)
-            .setDisplaySize(borderThickness, height * 0.8)
-            .setVisible(false);
-    }
+    
     
 
     createFloatingWindow(width, height) {

@@ -13,7 +13,7 @@ export class GameMechanics extends Scene {
     create() {
         const canvasWidth = this.scale.width;
         const canvasHeight = this.scale.height;
-        const courtScale = canvasHeight * 0.8;
+        const courtScale = canvasHeight * 0.8
 
         this.court = this.physics.add.staticImage(canvasWidth / 2, canvasHeight / 2, this.courtData.texture)
             .setDisplaySize(courtScale, courtScale / 2);
@@ -27,6 +27,8 @@ export class GameMechanics extends Scene {
         this.ball = this.physics.add.sprite(canvasWidth / 2, playerY, 'ball').setScale(0.2);
 
         this.createCourtBorders(canvasWidth, canvasHeight);
+
+        this.physics.add.collider(this.bandit, this.createCourtBorders);
 
         EventBus.emit('current-scene-ready', this);
     }
@@ -52,7 +54,28 @@ export class GameMechanics extends Scene {
     }
 
     update() {
-        // Handle player movement and other game mechanics here
+        let cursors = this.input.keyboard.createCursorKeys();
+
+        this.bandit.setVelocity(0)
+
+        if (cursors.left.isDown) {
+            this.bandit.setVelocityX(-160);
+            this.bandit.anims.play('left', true);
+        } 
+        else if (cursors.right.isDown) {
+            this.bandit.setVelocityX(160);
+            this.bandit.anims.play('right', true);
+        } 
+        
+        if (cursors.up.isDown ) {
+            this.bandit.setVelocityY(-160);
+            this.bandit.anims.play('up', true)
+        } 
+        else if (cursors.down.isDown ) {
+            this.bandit.setVelocityY(160); 
+            this.bandit.anims.play('down', true);
+        }
+        
     }
 
     changeScene() {
