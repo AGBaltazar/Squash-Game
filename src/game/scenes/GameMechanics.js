@@ -11,46 +11,26 @@ export class GameMechanics extends Scene {
     }
 
     create() {
+        this.physics.world.setBoundsCollision(true, true, true, false);
+
         const canvasWidth = this.scale.width;
         const canvasHeight = this.scale.height;
-        const courtScale = canvasHeight * 0.8
 
         this.court = this.physics.add.staticImage(canvasWidth / 2, canvasHeight / 2, this.courtData.texture)
-            .setDisplaySize(courtScale, courtScale / 2);
+            .setDisplaySize(window.innerWidth, window.innerHeight);
 
         const banditX = canvasWidth * 0.2;
         const stripeX = canvasWidth * 0.8;
         const playerY = canvasHeight * 0.5;
         
-        this.bandit = this.physics.add.sprite(banditX, playerY, 'bandit').setScale(0.5);
-        this.stripe = this.physics.add.sprite(stripeX, playerY, 'stripe').setScale(0.5);
-        this.ball = this.physics.add.sprite(canvasWidth / 2, playerY, 'ball').setScale(0.2);
+        this.bandit = this.physics.add.sprite(banditX, playerY, 'bandit').setScale(0.5).setCollideWorldBounds(true).setImmovable(true);
+        this.stripe = this.physics.add.sprite(stripeX, playerY, 'stripe').setScale(0.5).setCollideWorldBounds(true);
 
-        this.createCourtBorders(canvasWidth, canvasHeight);
+        this.ball = this.physics.add.group({key: 'ball', frame: 3, frameQuantity: 1, bounceX: 1, bounceY: 1, collideWorldBounds:true, velocityX: 100, velocityY: 100});
 
-        this.physics.add.collider(this.bandit, this.createCourtBorders);
+        this.physics.add.collider(this.ball, this.bandit)
 
         EventBus.emit('current-scene-ready', this);
-    }
-
-    createCourtBorders(width, height) {
-        const borderThickness = 20;
-
-        this.physics.add.staticImage(width / 2, (height * 0.1) - (borderThickness / 2), null)
-            .setDisplaySize(width * 0.8, borderThickness)
-            .setVisible(true);
-
-        this.physics.add.staticImage(width / 2, (height * 0.9) + (borderThickness / 2), null)
-            .setDisplaySize(width * 0.8, borderThickness)
-            .setVisible(true);
-
-        this.physics.add.staticImage((width * 0.1) - (borderThickness / 2), height / 2, null)
-            .setDisplaySize(borderThickness, height * 0.8)
-            .setVisible(true);
-
-        this.physics.add.staticImage((width * 0.9) + (borderThickness / 2), height / 2, null)
-            .setDisplaySize(borderThickness, height * 0.8)
-            .setVisible(true);
     }
 
     update() {
@@ -59,26 +39,39 @@ export class GameMechanics extends Scene {
         this.bandit.setVelocity(0)
 
         if (cursors.left.isDown) {
-            this.bandit.setVelocityX(-160);
+            this.bandit.setVelocityX(-200);
             this.bandit.anims.play('left', true);
         } 
         else if (cursors.right.isDown) {
-            this.bandit.setVelocityX(160);
+            this.bandit.setVelocityX(200);
             this.bandit.anims.play('right', true);
         } 
         
         if (cursors.up.isDown ) {
-            this.bandit.setVelocityY(-160);
+            this.bandit.setVelocityY(-200);
             this.bandit.anims.play('up', true)
         } 
         else if (cursors.down.isDown ) {
-            this.bandit.setVelocityY(160); 
+            this.bandit.setVelocityY(200); 
             this.bandit.anims.play('down', true);
         }
-        
+
+        //if(cursors.space.isDown ){}
+
+        //If the ball goes out of bounds, then reset the match
+        if(this.ball.y > 100){
+            this.scoredReset();
+        }
+    }
+
+    scoredReset(){
+        this.ball.setVelocity(0);
+        this.ball.setPosition(this.bandit.x, 500);
+        console.log('score')
     }
 
     changeScene() {
+
         this.scene.start('MainMenu');
     }
 }
